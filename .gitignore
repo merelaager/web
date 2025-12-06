@@ -34,6 +34,3 @@ public/img/sponsors/*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-
-# Prisma
-app/generated/prisma

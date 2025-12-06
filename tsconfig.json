@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "checkJs": true,
+    "verbatimModuleSyntax": true,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true
