@@ -68,7 +68,7 @@ const Sponsors = () => {
           >
             <img
               alt="Meredivisjon"
-              className="c-sponsor__img c-sponsor__img--vector"
+              className="c-sponsor__img c-sponsor__img--vector c-sponsor__img--black"
               src="/img/sponsors/meredivisjon.svg"
             />
           </a>
