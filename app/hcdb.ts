@@ -12,9 +12,9 @@
 
 import type { ReactElement } from "react";
 
-export const YEAR: number = 2025;
+export const YEAR: number = 2026;
 export const UNLOCK_TIME = new Date(
-  Date.parse("12 Jan 2025 12:00:00 UTC")
+  Date.parse("01 Jan 2026 12:00:00 UTC")
 ).getTime();
 
 export const REG_MAX_COUNT = 4;
@@ -32,22 +32,22 @@ export const landingQuickLinks: QuickLink[] = [
   //   href: "/registreerimine/",
   //   content: "Registreerimine",
   // },
-  {
-    href: "/info/laagrist/#asukoht",
-    content: "Asukoht ja kogunemine"
-  },
-  {
-    href: "/info/laagrist/#laagrisse-kaasa",
-    content: "Laagrisse kaasa"
-  },
+  // {
+  //   href: "/info/laagrist/#asukoht",
+  //   content: "Asukoht ja kogunemine"
+  // },
+  // {
+  //   href: "/info/laagrist/#laagrisse-kaasa",
+  //   content: "Laagrisse kaasa"
+  // },
   {
     href: "/info/vahetused/#ajad",
     content: "Laagrivahetuste ajad"
+  },
+  {
+    href: "/info/maksmine/#maksumus",
+    content: "Hinnad"
   }
-  // {
-  //   href: "/info/maksmine/#maksumus",
-  //   content: "Hinnad",
-  // },
 ];
 
 export interface PromoContent {
