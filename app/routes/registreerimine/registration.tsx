@@ -441,7 +441,7 @@ const RegistrationForm = ({
 
   const maxChildCount = REG_MAX_COUNT;
   const upfrontRegistrationFee = 100;
-  const shiftFullPrice = 350;
+  const shiftFullPrice = 360;
   const seniorityDiscount = 20;
 
   const specialPrices = [
