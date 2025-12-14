@@ -37,7 +37,7 @@ const cardsInfo: InfoCard[] = [
   {
     title: "Vahetused ja broneerimine",
     description:
-      "Suve jooksul toimub 4 erinevat laagrivahetust, igaüks erineva ilma, tegevuskava ja seltskonnaga. Üks täispikk vahetus kestab 12 päeva ja lühike vahetus 10 päeva. Enamasti tahavad lapsed tagasi tulla juba tuttavasse vahetusse, ent alati on ka neid, kes soovivad erinevad vahetused läbi proovida, sest sõpru leiab alati.",
+      "Suve jooksul toimub 4 erinevat laagrivahetust, igaüks erineva ilma, tegevuskava ja seltskonnaga. Üks täispikk vahetus kestab 12 päeva ja lühike vahetus 9 päeva. Enamasti tahavad lapsed tagasi tulla juba tuttavasse vahetusse, ent alati on ka neid, kes soovivad erinevad vahetused läbi proovida, sest sõpru leiab alati.",
     linkSuffix: "vahetused/",
     refs: [
       { id: "#ajad", description: "Laagrivahetuste ajad" },
