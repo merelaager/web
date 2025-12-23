@@ -15,7 +15,7 @@ export default function PIILegalRoute() {
       <section className="c-section c-section--legal">
         <div className="o-container">
           <h3 className="c-section-heading">Isikuandmete töötlemine</h3>
-          <p>Viimati täiendatud: 28. juuni 2025</p>
+          <p>Viimati täiendatud: 23. detsember 2025</p>
           <h4>
             Mida me peame <q>isikuandmeteks</q>?
           </h4>
@@ -78,14 +78,10 @@ export default function PIILegalRoute() {
             Lapse üldandmete säilitamise puhul on loogika keerulisem.
           </p>
           <ul>
-            <li>Lapse isikukoodi ja sünniaega talletame loetaval kujul kuni 3 kuud peale laagrisuve lõppu.</li>
-            <li>Lapse isikukoodi ja sünniaega talletame <q>peidetud</q> kujul (andmetest tuletatud
-              pseudonüüm) kuni lapse 18. eluaasta aasta lõpuni.
-            </li>
-            <li>Lapse sünniaastat talletame lapse 18. eluaasta aasta lõpuni.</li>
-            <li>Lapse nime talletame tähtajatult (kuni nõusoleku tagasivõtmiseni) laagri arhiivi tarbeks.</li>
+            <li>Lapse isikukoodi ja/või sünniaega talletame kuni lapse 18. eluaasta aasta lõpuni.</li>
+            <li>Lapse nime ja sünniaastat talletame tähtajatult (kuni nõusoleku tagasivõtmiseni) laagri arhiivi tarbeks.</li>
           </ul>
-          <p>Säilitame isikukoodi ja sünniaega kuni 18. eluaastani selleks, et tuvastada registreerimisel
+          <p>Säilitame isikukoodi ja/või sünniaega kuni 18. eluaastani selleks, et tuvastada registreerimisel
             lapse isikusamasust.
             See on vajalik näiteks selleks, et kontrollida, et laps ei ole saanud laagrikeeldu või et laps on
             tõepoolest laagris varem käinud (millest sõltub laagrikoha hind).
@@ -95,10 +91,6 @@ export default function PIILegalRoute() {
           <p>
             Kuna me täisealisi lapsi laagrisse vastu ei võta, kaob lapse täisealiseks saamisega meil vajadus lapse isik
             kindlaks määrata.
-            Kuna säilitame loetaval kujul aegumise kontrolliks vaid lapse sünniaastat, saame me andmed kustutada vaid
-            vastava aasta lõpus.
-            Pseudonüümist endast lapse sünniaega/isikukoodi välja lugeda ei saa, ent isikukoodi teades saab kontrollida,
-            kas isikukood vastab pseudonüümile.
           </p>
           {/*<p>
             Nõusoleku laagris käinud lapse nime arhiivist eemaldamiseks saab tagasi võtta vaid laps ise pärast 18.
