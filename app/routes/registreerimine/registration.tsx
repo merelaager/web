@@ -373,7 +373,7 @@ const RegistrationSubmitButton = ({
       value="submit"
       className="c-btn"
       id="submitBtn"
-      disabled={true}
+      disabled={isDisabled}
     >
       Registreerin
     </button>

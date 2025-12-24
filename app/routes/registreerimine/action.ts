@@ -66,7 +66,7 @@ const getStringError = <T>(
   }
   if (fieldValue.length > maxLength) {
     return {
-      [fieldName]: `${eeName} ei tohi olla pikem kui ${maxLength} tähemärki`,
+      [fieldName]: `${eeName} ei tohi olla pikem kui ${maxLength} tähemärki`
     } as Partial<T>;
   }
   return {};
@@ -125,16 +125,25 @@ export const formAction = async (form: FormData) => {
   const childCountFromForm = form.get("childCount");
   if (!childCountFromForm || typeof childCountFromForm !== "string") {
     errors.error = "Vormiga on mässatud! Palun värskendage lehte.";
-    return data({ errors }, { status: StatusCodes.BAD_REQUEST });
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.BAD_REQUEST }
+    );
   }
 
   const childCount = parseInt(childCountFromForm, 10);
   if (isNaN(childCount)) {
     errors.error = "Vormiga on mässatud! Palun värskendage lehte.";
-    return data({ errors }, { status: StatusCodes.BAD_REQUEST });
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.BAD_REQUEST }
+    );
   } else if (childCount > REG_MAX_COUNT) {
     errors.error = `Korraga saab registreerida kuni ${REG_MAX_COUNT} last!`;
-    return data({ errors }, { status: StatusCodes.BAD_REQUEST });
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.BAD_REQUEST }
+    );
   }
 
   const names = form.getAll("name");
@@ -170,7 +179,12 @@ export const formAction = async (form: FormData) => {
       "E-post",
       STRING_MAX
     ),
-    getStringError<FormErrorInfo>(contactNumber, "contactNumber", "Telefon", 20)
+    getStringError<FormErrorInfo>(
+      contactNumber,
+      "contactNumber",
+      "Telefon",
+      20
+    )
   );
 
   if (backupTel !== "null") {
@@ -181,7 +195,7 @@ export const formAction = async (form: FormData) => {
 
   const existingShifts = (
     await prisma.shiftInfo.findMany({
-      select: { id: true },
+      select: { id: true }
     })
   ).map((entry) => entry.id);
 
@@ -199,7 +213,7 @@ export const formAction = async (form: FormData) => {
       city,
       county,
       country,
-      shirtSize,
+      shirtSize
     });
 
     if (!fieldErrors.hasOwnProperty("name") && name.indexOf(" ") === -1) {
@@ -242,7 +256,7 @@ export const formAction = async (form: FormData) => {
       contactName: contactName,
       contactEmail: contactEmail,
       contactNumber: contactNumber,
-      sendEmail: SEND_EMAIL,
+      sendEmail: SEND_EMAIL
     };
 
     if (addendum !== "") childRegistrationData.addendum = addendum;
@@ -290,7 +304,10 @@ export const formAction = async (form: FormData) => {
 
   if (Object.keys(errors).length > 0) {
     errors.error = "Mõni kohustuslik väli on vigane või puudu";
-    return data({ errors }, { status: StatusCodes.BAD_REQUEST });
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.BAD_REQUEST }
+    );
   }
 
   // Check for the unlock date last, so that parents get form error feedback,
@@ -303,7 +320,10 @@ export const formAction = async (form: FormData) => {
     errors.error = `Registreerimine ei ole veel avatud. Jäänud on ${
       deltaMS / 1000
     } s.`;
-    return data({ errors }, { status: StatusCodes.FORBIDDEN });
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.FORBIDDEN }
+    );
   }
 
   const regUrl: string = process.env.REGISTRATION_URL ?? "";
@@ -314,36 +334,45 @@ export const formAction = async (form: FormData) => {
       mode: "cors",
       cache: "no-cache",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       redirect: "follow",
-      body: JSON.stringify(regData),
+      body: JSON.stringify(regData)
     });
   } catch (err) {
     console.error(err);
     errors.error = "Serveriga ei õnnestunud ühendust saada";
-    return data({ errors }, { status: StatusCodes.INTERNAL_SERVER_ERROR });
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.INTERNAL_SERVER_ERROR }
+    );
   }
 
+  const body = await response.text();
   if (!response.ok) {
-    const body = await response.text();
     console.log(body);
     console.log(form);
-    let jsonBody: JSendResponse | null = null;
-    try {
-      jsonBody = JSON.parse(body);
-      if (jsonBody !== null) {
-        const status = jsonBody.status;
-        if (status === "error") errors.error = jsonBody.message;
-        else errors.json = jsonBody.data;
-      } else {
-        errors.error = body;
+  }
+  let jsonBody: JSendResponse | null = null;
+  try {
+    jsonBody = JSON.parse(body);
+    if (jsonBody !== null) {
+      const status = jsonBody.status;
+
+      if (status === "success") {
+        return data(
+          { errors, registrationId: jsonBody.data?.registrationId },
+          { status: StatusCodes.OK }
+        );
       }
-    } catch {
+
+      if (status === "error") errors.error = jsonBody.message;
+      else errors.json = jsonBody.data;
+    } else {
       errors.error = body;
     }
-    return data({ errors }, { status: response.status });
+  } catch {
+    errors.error = body;
   }
-
-  return null;
+  return data({ errors, registrationId: null }, { status: response.status });
 };

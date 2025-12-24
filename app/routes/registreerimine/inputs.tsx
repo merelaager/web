@@ -142,7 +142,7 @@ interface UseIDCodeInputProps {
 export const UseIDCodeInput = forwardRef(
   (
     { entryId, setUseIDCode }: UseIDCodeInputProps,
-    ref: ForwardedRef<HTMLInputElement>
+    ref: ForwardedRef<HTMLInputElement>,
   ) => {
     const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
       setUseIDCode(!target.checked);
@@ -162,7 +162,7 @@ export const UseIDCodeInput = forwardRef(
         />
       </div>
     );
-  }
+  },
 );
 
 interface ShiftInputProps extends FormInputProps {
@@ -173,7 +173,7 @@ interface ShiftInputProps extends FormInputProps {
 export const ShiftInput = forwardRef(
   (
     { entryId, isRequired, shiftDateSpans, onChange, error }: ShiftInputProps,
-    ref: ForwardedRef<HTMLSelectElement>
+    ref: ForwardedRef<HTMLSelectElement>,
   ) => {
     const handleSelection = ({ target }: ChangeEvent<HTMLSelectElement>) => {
       const value = parseInt(target.value, 10);
@@ -187,7 +187,7 @@ export const ShiftInput = forwardRef(
       options.push(
         <option value={id} key={id}>
           {id}. vahetus ({span})
-        </option>
+        </option>,
       );
     }
 
@@ -210,7 +210,7 @@ export const ShiftInput = forwardRef(
         {error ? <em>{error}</em> : null}
       </div>
     );
-  }
+  },
 );
 
 export const ShirtInput = ({ entryId, isRequired, error }: FormInputProps) => {
@@ -246,7 +246,7 @@ interface SeniorityInputProps extends FormInputProps {
 export const SeniorityInput = forwardRef(
   (
     { entryId, isRequired, onChange, error }: SeniorityInputProps,
-    ref: ForwardedRef<HTMLInputElement>
+    ref: ForwardedRef<HTMLInputElement>,
   ) => {
     const handleToggle = ({ target }: ChangeEvent<HTMLInputElement>) => {
       const value: string = target.value;
@@ -289,7 +289,7 @@ export const SeniorityInput = forwardRef(
         {error ? <em>{error}</em> : null}
       </div>
     );
-  }
+  },
 );
 
 export const RoadInput = ({ entryId, isRequired, error }: FormInputProps) => {

@@ -13,6 +13,8 @@ model Child {
   sex           Sex
   yearsAtCamp   Int?           @db.UnsignedInt
   notes         String?        @db.Text
+  birthYear     Int?           @db.UnsignedInt
+  idCode        String?        @unique @db.VarChar(11)
   createdAt     DateTime       @default(now()) @db.DateTime(0)
   updatedAt     DateTime       @updatedAt @db.DateTime(0)
   oldRecords    OldRecord[]
@@ -81,6 +83,7 @@ model Record {
   teamId    Int?     @db.UnsignedInt
   isPresent Boolean  @default(false) // Whether the child is currently physically present.
   isActive  Boolean  @default(true) // Whether to count the child in the shift.
+  ageAtCamp Int      @db.UnsignedInt // Age the child will have at the start of camp.
   createdAt DateTime @default(now()) @db.DateTime(0)
   updatedAt DateTime @updatedAt @db.DateTime(0)
   child     Child    @relation(fields: [childId], references: [id])
@@ -98,6 +101,7 @@ model Registration {
   idCode        String?   @db.VarChar(255)
   shiftNr       Int       @db.UnsignedInt
   isRegistered  Boolean   @default(false)
+  regId         String    @db.VarChar(255)
   regOrder      Int       @db.UnsignedInt
   isOld         Boolean   @default(true)
   birthday      DateTime  @db.Date
@@ -116,6 +120,7 @@ model Registration {
   createdAt     DateTime  @default(now()) @db.DateTime(0)
   updatedAt     DateTime  @updatedAt @db.DateTime(0)
   notifSent     Boolean   @default(false)
+  visible       Boolean   @default(true) // Displayed in the web UI.
   billId        Int?      @db.UnsignedInt
   child         Child     @relation(fields: [childId], references: [id], onDelete: NoAction)
   shift         ShiftInfo @relation(fields: [shiftNr], references: [id], onDelete: NoAction)
@@ -155,11 +160,12 @@ model RolePermission {
 
 model Role {
   id               Int              @id @default(autoincrement()) @db.UnsignedInt
-  roleName         String           @db.VarChar(255)
+  roleName         String           @unique @db.VarChar(255)
   createdAt        DateTime         @default(now()) @db.DateTime(0)
   updatedAt        DateTime         @updatedAt @db.DateTime(0)
   role_permissions RolePermission[]
   user_roles       UserRoles[]
+  signupToken      SignupToken[]
 
   @@map("roles")
 }
@@ -186,14 +192,15 @@ model ShiftData {
 model ShiftStaff {
   id        Int              @id @default(autoincrement()) @db.UnsignedInt
   shiftNr   Int              @db.UnsignedInt
-  year      Int              @default(2023) @db.UnsignedInt
+  year      Int              @default(2025) @db.UnsignedInt
   createdAt DateTime         @default(now()) @db.DateTime(0)
   updatedAt DateTime         @updatedAt @db.DateTime(0)
   userId    Int?             @db.UnsignedInt
-  name      String?          @db.VarChar(255)
+  name      String           @db.VarChar(255)
   role      shift_staff_role @default(part)
   user      User?            @relation(fields: [userId], references: [id])
 
+  @@unique([shiftNr, year, name], map: "shift_member_unique")
   @@index([userId], map: "userId")
   @@map("shift_staff")
 }
@@ -229,15 +236,18 @@ model ShiftInfo {
 }
 
 model SignupToken {
-  token     String             @id @db.Char(36)
-  email     String             @db.VarChar(255)
-  isExpired Boolean            @default(false)
-  shiftNr   Int                @db.UnsignedInt
-  role      signup_tokens_role @default(part)
-  usedDate  DateTime?          @db.DateTime(0)
-  createdAt DateTime           @default(now()) @db.DateTime(0)
-  updatedAt DateTime           @updatedAt @db.DateTime(0)
+  token       String           @id @db.Char(36)
+  email       String           @db.VarChar(255)
+  isExpired   Boolean          @default(false)
+  shiftNr     Int              @db.UnsignedInt
+  roleId      Int?             @db.UnsignedInt
+  displayRole shift_staff_role @default(part)
+  usedDate    DateTime?        @db.DateTime(0)
+  createdAt   DateTime         @default(now()) @db.DateTime(0)
+  updatedAt   DateTime         @updatedAt @db.DateTime(0)
+  role        Role?            @relation(fields: [roleId], references: [id])
 
+  @@index([roleId], map: "roleId")
   @@map("signup_tokens")
 }
 
@@ -278,24 +288,40 @@ model UserRoles {
 }
 
 model User {
-  id           Int          @id @default(autoincrement()) @db.UnsignedInt
-  username     String       @unique(map: "username") @db.VarChar(255)
-  currentShift Int          @db.UnsignedInt
-  name         String       @db.VarChar(255)
-  email        String?      @unique(map: "email") @db.VarChar(255)
-  nickname     String?      @db.VarChar(255)
-  role         users_role   @default(std)
-  password     String       @db.VarChar(255)
-  refreshToken String?      @db.VarChar(255)
-  createdAt    DateTime     @default(now()) @db.DateTime(0)
-  updatedAt    DateTime     @updatedAt @db.DateTime(0)
+  id           Int           @id @default(autoincrement()) @db.UnsignedInt
+  username     String        @unique(map: "username") @db.VarChar(255)
+  currentShift Int           @db.UnsignedInt
+  name         String        @db.VarChar(255)
+  email        String?       @unique(map: "email") @db.VarChar(255)
+  nickname     String?       @db.VarChar(255)
+  role         users_role    @default(std)
+  password     String        @db.VarChar(255)
+  refreshToken String?       @db.VarChar(255)
+  createdAt    DateTime      @default(now()) @db.DateTime(0)
+  updatedAt    DateTime      @updatedAt @db.DateTime(0)
   documents    Document[]
   reset_tokens ResetToken[]
   shift_staff  ShiftStaff[]
   shifts       ShiftInfo[]
   user_roles   UserRoles[]
+  certificates Certificate[]
 
   @@map("users")
+}
+
+model Certificate {
+  id        Int       @id @default(autoincrement()) @db.UnsignedInt
+  name      String    @db.VarChar(255)
+  certId    String    @unique(map: "certId") @db.VarChar(36)
+  urlId     String?   @db.VarChar(36)
+  userId    Int       @db.UnsignedInt
+  issuedAt  DateTime  @db.DateTime(0)
+  expiresAt DateTime? @db.DateTime(0)
+  isExpired Boolean   @default(false)
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "userId")
+  @@map("certificates")
 }
 
 model Bill {
@@ -310,13 +336,16 @@ model Bill {
   @@map("bills")
 }
 
-model tent_scores {
+model TentScore {
   id        Int      @id @default(autoincrement()) @db.UnsignedInt
   shiftNr   Int      @db.UnsignedInt
   tentNr    Int      @db.UnsignedInt
   score     Int      @db.UnsignedTinyInt
+  year      Int      @db.UnsignedInt
   createdAt DateTime @default(now()) @db.DateTime(0)
   updatedAt DateTime @updatedAt @db.DateTime(0)
+
+  @@map("tent_scores")
 }
 
 model Session {
@@ -332,13 +361,6 @@ model Session {
 enum Sex {
   M
   F
-}
-
-enum signup_tokens_role {
-  boss
-  full
-  part
-  guest
 }
 
 enum users_role {

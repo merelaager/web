@@ -5,7 +5,7 @@ import {
   MetaFunction,
   redirect,
   useActionData,
-  useLoaderData,
+  useLoaderData
 } from "react-router";
 
 import { genMetaData } from "~/utils/metagen";
@@ -16,6 +16,7 @@ import Email from "~/components/email";
 import { RegistrationSection } from "~/routes/registreerimine/registration";
 import { formAction } from "~/routes/registreerimine/action";
 import { getFreeSlots } from "~/utils/slots";
+import { StatusCodes } from "http-status-codes";
 
 export const meta: MetaFunction = () => {
   return genMetaData(
@@ -30,7 +31,7 @@ export const loader = async () => {
   return {
     shifts,
     remainingSlots,
-    currentTime: Date.now(),
+    currentTime: Date.now()
   };
 };
 
@@ -61,12 +62,12 @@ interface FreeSpaceCardProps {
 }
 
 const FreeSpaceCard = ({
-  shiftNr,
-  username,
-  phone,
-  freeBoySlots,
-  freeGirlSlots,
-}: FreeSpaceCardProps) => {
+                         shiftNr,
+                         username,
+                         phone,
+                         freeBoySlots,
+                         freeGirlSlots
+                       }: FreeSpaceCardProps) => {
   return (
     <div className="c-regfree">
       <h4 className="u-text-center">{shiftNr}. vahetus</h4>
@@ -113,7 +114,8 @@ const FreeSpaceSection = () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const res = await formAction(await request.formData());
-  if (res === null) return redirect("/registreermine/edu");
+  if (res.init?.status === StatusCodes.OK)
+    return redirect(`/broneering/${res.data.registrationId}`);
   return res;
 };
 
