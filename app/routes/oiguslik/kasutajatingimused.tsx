@@ -6,7 +6,7 @@ import MetaConstants from "~/utils/meta-constants";
 export const meta: MetaFunction = () => {
   return genMetaData(
     MetaConstants.KASUTAJATINGIMUSED,
-    "/kasutajatingimused"
+    "/kasutajatingimused",
   ) as MetaDescriptor[];
 };
 
@@ -16,7 +16,7 @@ export default function TermsOfUseLegalRoute() {
       <section className="c-section c-section--legal">
         <div className="o-container">
           <h3 className="c-section-heading">Veebilehe kasutajatingimused</h3>
-          <p>Viimati täiendatud: 5. detsember 2020</p>
+          <p>Viimati täiendatud: 24. detsember 2025</p>
           <ol className="u-no-list-style u-nested-increments">
             <li>
               <h4>Üldinfo</h4>
@@ -98,10 +98,7 @@ export default function TermsOfUseLegalRoute() {
                 </li>
                 <li>
                   Veebisaidi lähtekoodi on võimalik sirvida{" "}
-                  <a
-                    href="https://github.com/takakv/merelaager/"
-                    className="t-visible"
-                  >
+                  <a href="https://github.com/merelaager" className="t-visible">
                     siin
                   </a>
                   , ent seda ei või kasutada / reproda, ei osadena ega
