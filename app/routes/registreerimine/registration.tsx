@@ -447,7 +447,7 @@ const RegistrationForm = ({
   const specialPrices = [
     {
       shiftNr: 1,
-      fullPrice: 290,
+      fullPrice: 250,
       discount: 10,
     },
   ];
