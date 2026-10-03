@@ -4,6 +4,8 @@ import { prisma } from "~/db.server";
 import { CLOSE_TIME, REG_MAX_COUNT, UNLOCK_TIME } from "~/hcdb";
 import { JSendResponse, RegistrationAPIRequest } from "~/utils/api.types";
 import { StatusCodes } from "http-status-codes";
+import { Ajv } from "ajv";
+import addFormats from "ajv-formats";
 
 const REGISTRATION_URL = process.env.REGISTRATION_URL;
 if (!REGISTRATION_URL) {
@@ -64,6 +66,26 @@ type MandatoryFields = {
 };
 
 const STRING_MAX = 255;
+
+const isEmail = addFormats(new Ajv()).compile({
+  type: "string",
+  format: "email"
+});
+
+const CHILD_MIN_AGE = 4;
+const CHILD_MAX_AGE = 18;
+
+const today = () =>
+  new Date(new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Tallinn" }));
+
+const getAge = (dob: Date, on: Date) => {
+  const age = on.getUTCFullYear() - dob.getUTCFullYear();
+  const hadBirthday =
+    on.getUTCMonth() > dob.getUTCMonth() ||
+    (on.getUTCMonth() === dob.getUTCMonth() &&
+      on.getUTCDate() >= dob.getUTCDate());
+  return hadBirthday ? age : age - 1;
+};
 
 const getStringError = <T>(
   fieldValue: string,
@@ -150,7 +172,7 @@ export const formAction = async (form: FormData) => {
   }
 
   const childCount = parseInt(childCountFromForm, 10);
-  if (isNaN(childCount)) {
+  if (isNaN(childCount) || childCount < 1) {
     errors.error = "Vormiga on mässatud! Palun värskendage lehte.";
     return data(
       { errors, registrationId: null },
@@ -205,9 +227,18 @@ export const formAction = async (form: FormData) => {
     )
   );
 
-  if (backupTel !== "null") {
-    getStringError<FormErrorInfo>(backupTel, "backupTel", "Varutelefon", 20);
-  } else backupTel = null;
+  if (!errors.contactEmail && !isEmail(contactEmail)) {
+    errors.contactEmail = "E-posti aadress ei ole korrektne";
+  }
+
+  if (backupTel === "" || backupTel === "null") {
+    backupTel = null;
+  } else {
+    Object.assign(
+      errors,
+      getStringError<FormErrorInfo>(backupTel, "backupTel", "Varutelefon", 20)
+    );
+  }
 
   const regData: RegistrationAPIRequest[] = [];
 
@@ -296,8 +327,11 @@ export const formAction = async (form: FormData) => {
       } else {
         const dobString = String(dobs[i]);
         const dob = new Date(dobString);
+        const age = getAge(dob, today());
         if (isNaN(dob.valueOf())) {
           fieldErrors.dob = "Sünnipäev peab olema kehtiv kuupäev";
+        } else if (age < CHILD_MIN_AGE || age > CHILD_MAX_AGE) {
+          fieldErrors.dob = `Laps peab olema ${CHILD_MIN_AGE}–${CHILD_MAX_AGE}-aastane`;
         } else {
           childRegistrationData.dob = dob;
         }
