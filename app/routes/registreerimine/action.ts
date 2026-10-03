@@ -5,6 +5,11 @@ import { REG_MAX_COUNT, UNLOCK_TIME } from "~/hcdb";
 import { JSendResponse, RegistrationAPIRequest } from "~/utils/api.types";
 import { StatusCodes } from "http-status-codes";
 
+const REGISTRATION_URL = process.env.REGISTRATION_URL;
+if (!REGISTRATION_URL) {
+  throw new Error("Registration URL is missing");
+}
+
 // Send registration emails except when disabled for development purposes.
 const SEND_EMAIL = !(
   process.env.NODE_ENV === "development" &&
@@ -326,10 +331,9 @@ export const formAction = async (form: FormData) => {
     );
   }
 
-  const regUrl: string = process.env.REGISTRATION_URL ?? "";
   let response: Response;
   try {
-    response = await fetch(regUrl, {
+    response = await fetch(REGISTRATION_URL, {
       method: "POST",
       mode: "cors",
       cache: "no-cache",
