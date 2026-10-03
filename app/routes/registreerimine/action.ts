@@ -10,6 +10,11 @@ if (!REGISTRATION_URL) {
   throw new Error("Registration URL is missing");
 }
 
+const REGISTRATION_API_KEY = process.env.REGISTRATION_API_KEY;
+if (!REGISTRATION_API_KEY) {
+  throw new Error("Registration API key is missing");
+}
+
 // Send registration emails except when disabled for development purposes.
 const SEND_EMAIL = !(
   process.env.NODE_ENV === "development" &&
@@ -338,7 +343,8 @@ export const formAction = async (form: FormData) => {
       mode: "cors",
       cache: "no-cache",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${REGISTRATION_API_KEY}`
       },
       redirect: "follow",
       body: JSON.stringify(regData)
