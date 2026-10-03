@@ -1,208 +1,53 @@
+// Read-only subset of the schema in adminpanel-api.
+// Never run `prisma migrate` or `prisma db push` from this repository: it
+// would drop every table and column missing from this file.
+
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model Child {
   id            Int            @id @default(autoincrement()) @db.UnsignedInt
   name          String         @db.VarChar(255)
   sex           Sex
-  yearsAtCamp   Int?           @db.UnsignedInt
-  notes         String?        @db.Text
-  birthYear     Int?           @db.UnsignedInt
-  idCode        String?        @unique @db.VarChar(11)
-  createdAt     DateTime       @default(now()) @db.DateTime(0)
-  updatedAt     DateTime       @updatedAt @db.DateTime(0)
-  oldRecords    OldRecord[]
   registrations Registration[]
-  shift_data    ShiftData[]
-  teams         Team[]
-  records       Record[]
 
   @@map("children")
 }
 
-model Document {
-  id          Int      @id @default(autoincrement()) @db.UnsignedInt
-  filename    String?  @db.VarChar(255)
-  accessLevel String?  @db.Text
-  name        String?  @db.Text
-  ownerId     Int?     @db.UnsignedInt
-  createdAt   DateTime @default(now()) @db.DateTime(0)
-  updatedAt   DateTime @updatedAt @db.DateTime(0)
-  users       User?    @relation(fields: [ownerId], references: [id])
-
-  @@index([ownerId], map: "ownerId")
-  @@map("documents")
-}
-
-model EventInfo {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  name      String   @db.VarChar(255)
-  year      Int      @default(2023) @db.UnsignedInt
-  shiftNr   Int      @db.UnsignedInt
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
-
-  @@map("event_info")
-}
-
-model Permission {
-  id               Int              @id @default(autoincrement()) @db.UnsignedInt
-  permissionName   String           @db.VarChar(255)
-  createdAt        DateTime         @default(now()) @db.DateTime(0)
-  updatedAt        DateTime         @updatedAt @db.DateTime(0)
-  role_permissions RolePermission[]
-
-  @@map("permissions")
-}
-
-model OldRecord {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  shiftNr   Int      @db.UnsignedInt
-  year      Int      @default(2023) @db.UnsignedInt
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
-  childId   Int      @db.UnsignedInt
-  children  Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
-
-  @@index([childId], map: "childId")
-  @@map("old_records")
-}
-
-model Record {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  childId   Int      @db.UnsignedInt
-  shiftNr   Int      @db.UnsignedInt
-  year      Int      @db.UnsignedInt
-  tentNr    Int?     @db.UnsignedInt
-  teamId    Int?     @db.UnsignedInt
-  isPresent Boolean  @default(false) // Whether the child is currently physically present.
-  isActive  Boolean  @default(true) // Whether to count the child in the shift.
-  ageAtCamp Int      @db.UnsignedInt // Age the child will have at the start of camp.
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
-  child     Child    @relation(fields: [childId], references: [id])
-  team      Team?    @relation(fields: [teamId], references: [id])
-
-  @@unique(name: "metaId", [childId, shiftNr, year], map: "record_meta_unique")
-  @@index([childId], map: "childId")
-  @@index([teamId], map: "teamId")
-  @@map("records")
-}
-
 model Registration {
-  id            Int       @id @default(autoincrement()) @db.UnsignedInt
-  childId       Int       @db.UnsignedInt
-  idCode        String?   @db.VarChar(255)
-  shiftNr       Int       @db.UnsignedInt
-  isRegistered  Boolean   @default(false)
-  regId         String    @db.VarChar(255)
-  regOrder      Int       @db.UnsignedInt
-  isOld         Boolean   @default(true)
-  birthday      DateTime  @db.Date
-  tsSize        String    @db.VarChar(255)
-  addendum      String?   @db.Text
-  road          String    @db.VarChar(255)
-  city          String    @db.VarChar(255)
-  county        String    @db.VarChar(255)
-  country       String    @default("Eesti") @db.VarChar(255)
-  contactName   String    @db.VarChar(255)
-  contactNumber String    @db.VarChar(255)
-  contactEmail  String    @db.VarChar(255)
-  backupTel     String?   @db.VarChar(255)
-  pricePaid     Int       @default(0) @db.UnsignedInt
-  priceToPay    Int       @default(0) @db.UnsignedInt
-  createdAt     DateTime  @default(now()) @db.DateTime(0)
-  updatedAt     DateTime  @updatedAt @db.DateTime(0)
-  notifSent     Boolean   @default(false)
-  visible       Boolean   @default(true) // Displayed in the web UI.
-  billId        Int?      @db.UnsignedInt
-  child         Child     @relation(fields: [childId], references: [id], onDelete: NoAction)
-  shift         ShiftInfo @relation(fields: [shiftNr], references: [id], onDelete: NoAction)
-  bill          Bill?     @relation(fields: [billId], references: [id])
+  id           Int       @id @default(autoincrement()) @db.UnsignedInt
+  childId      Int       @db.UnsignedInt
+  shiftNr      Int       @db.UnsignedInt
+  isRegistered Boolean   @default(false)
+  regId        String    @db.VarChar(255)
+  contactEmail String    @db.VarChar(255)
+  child        Child     @relation(fields: [childId], references: [id], onDelete: NoAction)
+  shift        ShiftInfo @relation(fields: [shiftNr], references: [id], onDelete: NoAction)
 
-  @@index([childId], map: "childId")
-  @@index([shiftNr], map: "shiftNr")
-  @@index([billId], map: "billId")
   @@map("registrations")
 }
 
-model ResetToken {
-  token     String   @id @db.VarChar(255)
-  isExpired Boolean  @default(false)
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
-  userId    Int      @db.UnsignedInt
-  users     User     @relation(fields: [userId], references: [id], onDelete: NoAction)
+model ShiftInfo {
+  id               Int            @id @db.UnsignedInt
+  bossName         String         @db.VarChar(255)
+  bossEmail        String         @db.VarChar(255)
+  bossPhone        String         @db.VarChar(255)
+  startDate        DateTime       @db.Date
+  length           Int            @db.UnsignedInt
+  boySlots         Int            @default(20) @db.UnsignedInt
+  girlSlots        Int            @default(20) @db.UnsignedInt
+  boySlotsReserve  Int            @default(2) @db.UnsignedInt
+  girlSlotsReserve Int            @default(2) @db.UnsignedInt
+  maxFreeDisplay   Int            @default(20) @db.UnsignedInt
+  registrations    Registration[]
 
-  @@index([userId], map: "userId")
-  @@map("reset_tokens")
-}
-
-model RolePermission {
-  roleId       Int        @db.UnsignedInt
-  permissionId Int        @db.UnsignedInt
-  createdAt    DateTime   @default(now()) @db.DateTime(0)
-  updatedAt    DateTime   @updatedAt @db.DateTime(0)
-  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-
-  @@id([roleId, permissionId])
-  @@unique([roleId, permissionId], map: "roleId_permissionId_unique")
-  @@index([permissionId], map: "permissionId")
-  @@map("role_permissions")
-}
-
-model Role {
-  id               Int              @id @default(autoincrement()) @db.UnsignedInt
-  roleName         String           @unique @db.VarChar(255)
-  createdAt        DateTime         @default(now()) @db.DateTime(0)
-  updatedAt        DateTime         @updatedAt @db.DateTime(0)
-  role_permissions RolePermission[]
-  user_roles       UserRoles[]
-  signupToken      SignupToken[]
-
-  @@map("roles")
-}
-
-model ShiftData {
-  id          Int      @id @default(autoincrement()) @db.UnsignedInt
-  shiftNr     Int      @db.UnsignedInt
-  tentNr      Int?     @db.UnsignedInt
-  parentNotes String?  @db.Text
-  isPresent   Boolean  @default(false)
-  createdAt   DateTime @default(now()) @db.DateTime(0)
-  updatedAt   DateTime @updatedAt @db.DateTime(0)
-  childId     Int      @db.UnsignedInt
-  teamId      Int?     @db.UnsignedInt
-  isActive    Boolean  @default(true)
-  children    Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
-  teams       Team?    @relation(fields: [teamId], references: [id], onDelete: Cascade)
-
-  @@index([childId], map: "childId")
-  @@index([teamId], map: "teamId")
-  @@map("shift_data")
-}
-
-model ShiftStaff {
-  id        Int              @id @default(autoincrement()) @db.UnsignedInt
-  shiftNr   Int              @db.UnsignedInt
-  year      Int              @default(2025) @db.UnsignedInt
-  createdAt DateTime         @default(now()) @db.DateTime(0)
-  updatedAt DateTime         @updatedAt @db.DateTime(0)
-  userId    Int?             @db.UnsignedInt
-  name      String           @db.VarChar(255)
-  role      shift_staff_role @default(part)
-  user      User?            @relation(fields: [userId], references: [id])
-
-  @@unique([shiftNr, year, name], map: "shift_member_unique")
-  @@index([userId], map: "userId")
-  @@map("shift_staff")
+  @@map("shifts")
 }
 
 model GeneralInfo {
@@ -213,167 +58,7 @@ model GeneralInfo {
   @@map("general_info")
 }
 
-model ShiftInfo {
-  id               Int            @id @db.UnsignedInt
-  bossName         String         @db.VarChar(255)
-  bossEmail        String         @db.VarChar(255)
-  bossPhone        String         @db.VarChar(255)
-  startDate        DateTime       @db.Date
-  length           Int            @db.UnsignedInt
-  createdAt        DateTime       @default(now()) @db.DateTime(0)
-  updatedAt        DateTime       @updatedAt @db.DateTime(0)
-  bossId           Int?           @db.UnsignedInt
-  boySlots         Int            @default(20) @db.UnsignedInt
-  girlSlots        Int            @default(20) @db.UnsignedInt
-  boySlotsReserve  Int            @default(2) @db.UnsignedInt
-  girlSlotsReserve Int            @default(2) @db.UnsignedInt
-  maxFreeDisplay   Int            @default(20) @db.UnsignedInt
-  registrations    Registration[]
-  boss             User?          @relation(fields: [bossId], references: [id], onDelete: NoAction)
-
-  @@index([bossId], map: "bossId")
-  @@map("shifts")
-}
-
-model SignupToken {
-  token       String           @id @db.Char(36)
-  email       String           @db.VarChar(255)
-  isExpired   Boolean          @default(false)
-  shiftNr     Int              @db.UnsignedInt
-  roleId      Int?             @db.UnsignedInt
-  displayRole shift_staff_role @default(part)
-  usedDate    DateTime?        @db.DateTime(0)
-  createdAt   DateTime         @default(now()) @db.DateTime(0)
-  updatedAt   DateTime         @updatedAt @db.DateTime(0)
-  role        Role?            @relation(fields: [roleId], references: [id])
-
-  @@index([roleId], map: "roleId")
-  @@map("signup_tokens")
-}
-
-model Team {
-  id         Int         @id @default(autoincrement()) @db.UnsignedInt
-  shiftNr    Int         @db.UnsignedInt
-  name       String      @db.VarChar(255)
-  year       Int         @db.UnsignedInt
-  place      Int?        @db.UnsignedInt
-  captainId  Int?        @db.UnsignedInt
-  createdAt  DateTime    @default(now()) @db.DateTime(0)
-  updatedAt  DateTime    @updatedAt @db.DateTime(0)
-  shift_data ShiftData[]
-  captain    Child?      @relation(fields: [captainId], references: [id])
-  records    Record[]
-
-  @@index([captainId], map: "captainId")
-  @@map("teams")
-}
-
-model UserRoles {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  shiftNr   Int      @db.UnsignedInt
-  userId    Int      @db.UnsignedInt
-  roleId    Int      @db.UnsignedInt
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
-
-  // One user should only have one role per shift.
-  // So far this reflects reality accurately, and simplifies permission assessment.
-  // Hopefully this does not become an obstacle in the future.
-  @@unique([userId, shiftNr], map: "userId_shiftNr_unique")
-  @@index([roleId], map: "roleId")
-  @@index([userId], map: "userId")
-  @@map("user_roles")
-}
-
-model User {
-  id           Int           @id @default(autoincrement()) @db.UnsignedInt
-  username     String        @unique(map: "username") @db.VarChar(255)
-  currentShift Int           @db.UnsignedInt
-  name         String        @db.VarChar(255)
-  email        String?       @unique(map: "email") @db.VarChar(255)
-  nickname     String?       @db.VarChar(255)
-  role         users_role    @default(std)
-  password     String        @db.VarChar(255)
-  refreshToken String?       @db.VarChar(255)
-  createdAt    DateTime      @default(now()) @db.DateTime(0)
-  updatedAt    DateTime      @updatedAt @db.DateTime(0)
-  documents    Document[]
-  reset_tokens ResetToken[]
-  shift_staff  ShiftStaff[]
-  shifts       ShiftInfo[]
-  user_roles   UserRoles[]
-  certificates Certificate[]
-
-  @@map("users")
-}
-
-model Certificate {
-  id        Int       @id @default(autoincrement()) @db.UnsignedInt
-  name      String    @db.VarChar(255)
-  certId    String    @unique(map: "certId") @db.VarChar(36)
-  urlId     String?   @db.VarChar(36)
-  userId    Int       @db.UnsignedInt
-  issuedAt  DateTime  @db.DateTime(0)
-  expiresAt DateTime? @db.DateTime(0)
-  isExpired Boolean   @default(false)
-  user      User      @relation(fields: [userId], references: [id])
-
-  @@index([userId], map: "userId")
-  @@map("certificates")
-}
-
-model Bill {
-  id            Int            @id @default(autoincrement()) @db.UnsignedInt
-  contactName   String         @db.VarChar(255)
-  billTotal     Int            @db.UnsignedInt
-  isPaid        Boolean        @default(false)
-  createdAt     DateTime       @default(now()) @db.DateTime(0)
-  updatedAt     DateTime       @updatedAt @db.DateTime(0)
-  registrations Registration[]
-
-  @@map("bills")
-}
-
-model TentScore {
-  id        Int      @id @default(autoincrement()) @db.UnsignedInt
-  shiftNr   Int      @db.UnsignedInt
-  tentNr    Int      @db.UnsignedInt
-  score     Int      @db.UnsignedTinyInt
-  year      Int      @db.UnsignedInt
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
-
-  @@map("tent_scores")
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String   @db.Text
-  expiresAt DateTime @db.DateTime(0)
-  createdAt DateTime @default(now()) @db.DateTime(0)
-
-  @@map("sessions")
-}
-
 enum Sex {
   M
   F
-}
-
-enum users_role {
-  root
-  std
-  master
-  op
-  camper
-}
-
-enum shift_staff_role {
-  boss
-  full
-  part
-  guest
 }

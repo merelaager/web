@@ -22,15 +22,19 @@ FLUSH PRIVILEGES;
 EXIT;
 ```
 
-Add the database url to environment
+Create the tables from
+[adminpanel-api](https://github.com/merelaager/adminpanel-api).
+In that repository, with `DATABASE_URL` pointing to this database, run:
 ```
-export DATABASE_URL=mysql://prisma:password@localhost:3306/merelaager
+yarn prisma db push
 ```
 
-npx push prisma db to mysql
-```
-sudo npx prisma db push
-```
+> [!WARNING]
+> Do not run `prisma db push` in this repository. Its Prisma schema is
+> incomplete, so pushing it deletes data.
+
+Fill in the `DATABASE_*` variables in `.env` (see `.env.template`).
+`yarn install` generates the Prisma client.
 
 ### Generate SASS
 ```

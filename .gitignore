@@ -37,3 +37,6 @@ public/img/sponsors/*
 
 # TypeScript
 *.tsbuildinfo
+
+# Prisma client
+/app/generated/
