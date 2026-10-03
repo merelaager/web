@@ -33,7 +33,7 @@ import {
 } from "~/routes/registreerimine/inputs";
 import { loader } from "~/routes/registreerimine/route";
 import { getShiftDateSpans, ShiftDateSpans } from "~/utils/shift-dates";
-import { REG_MAX_COUNT, UNLOCK_TIME } from "~/hcdb";
+import { CLOSE_TIME, REG_MAX_COUNT, UNLOCK_TIME } from "~/hcdb";
 import type {
   ChildFormFieldError,
   FormErrorInfo,
@@ -353,11 +353,12 @@ type RegistrationSubmitButtonProps = {
 const RegistrationSubmitButton = ({
   currentTime,
 }: RegistrationSubmitButtonProps) => {
+  const isClosed = currentTime >= CLOSE_TIME;
   const [isDisabled, setIsDisabled] = useState<boolean>(
-    currentTime < UNLOCK_TIME
+    currentTime < UNLOCK_TIME || isClosed
   );
 
-  if (isDisabled) {
+  if (isDisabled && !isClosed) {
     const eta = UNLOCK_TIME - currentTime;
     console.log(`Unlock ETA: ${eta} ms`);
     const timer = setTimeout(() => {
@@ -591,17 +592,25 @@ export const RegistrationSection = ({
 }: {
   errors: FormErrorInfo | undefined;
 }) => {
+  const { currentTime } = useLoaderData<typeof loader>();
+
   return (
     <section className="c-section">
       <div className="o-container">
         <h3 className="c-section-heading">Registreerimine</h3>
-        <InfoBanner>
-          Registreerimine algab 01. jaanuaril 2026 kell 14.00.
-        </InfoBanner>
-        <InfoBanner>
-          Vabade kohtade puudumisel saate registreeruda reservnimekirja selle
-          sama vormi abil.
-        </InfoBanner>
+        {currentTime < UNLOCK_TIME ? (
+          <InfoBanner>
+            Registreerimine algab 01. jaanuaril 2026 kell 14.00.
+          </InfoBanner>
+        ) : null}
+        {currentTime >= CLOSE_TIME ? (
+          <WarningBanner>Registreerimine on suletud.</WarningBanner>
+        ) : (
+          <InfoBanner>
+            Vabade kohtade puudumisel saate registreeruda reservnimekirja selle
+            sama vormi abil.
+          </InfoBanner>
+        )}
         <RegistrationForm errors={errors} />
       </div>
     </section>

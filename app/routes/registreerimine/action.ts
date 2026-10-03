@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { data } from "react-router";
 import { prisma } from "~/db.server";
-import { REG_MAX_COUNT, UNLOCK_TIME } from "~/hcdb";
+import { CLOSE_TIME, REG_MAX_COUNT, UNLOCK_TIME } from "~/hcdb";
 import { JSendResponse, RegistrationAPIRequest } from "~/utils/api.types";
 import { StatusCodes } from "http-status-codes";
 
@@ -131,6 +131,14 @@ const validateChildMandatory = (fields: MandatoryFields) => {
 
 export const formAction = async (form: FormData) => {
   const errors: FormErrorInfo = {};
+
+  if (Date.now() >= CLOSE_TIME) {
+    errors.error = "Registreerimine on suletud.";
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.FORBIDDEN }
+    );
+  }
 
   const childCountFromForm = form.get("childCount");
   if (!childCountFromForm || typeof childCountFromForm !== "string") {
