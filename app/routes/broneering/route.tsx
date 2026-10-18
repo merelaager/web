@@ -2,21 +2,18 @@ import {
   Link,
   MetaDescriptor,
   MetaFunction,
-  useLoaderData,
+  useLoaderData
 } from "react-router";
 import { Route } from "../../../.react-router/types/app/+types/root";
 
-import { genMetaData } from "~/utils/metagen";
+import { genPrivateMetaData } from "~/utils/metagen";
 import MetaConstants from "~/utils/meta-constants";
 import { getRegistrationInfo } from "~/utils/registration-info";
 import React from "react";
 import LoaderArgs = Route.LoaderArgs;
 
 export const meta: MetaFunction = () => {
-  return genMetaData(
-    MetaConstants.REGISTREERIMINE,
-    "/broneering",
-  ) as MetaDescriptor[];
+  return genPrivateMetaData(MetaConstants.REGISTREERIMINE) as MetaDescriptor[];
 };
 
 export const loader = async ({ params }: LoaderArgs) => {

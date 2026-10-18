@@ -6,7 +6,7 @@ import MetaConstants from "~/utils/meta-constants";
 export const meta: MetaFunction = () => {
   return genMetaData(
     MetaConstants.KASUTAJATINGIMUSED,
-    "/kasutajatingimused",
+    "/oiguslik/kasutajatingimused",
   ) as MetaDescriptor[];
 };
 

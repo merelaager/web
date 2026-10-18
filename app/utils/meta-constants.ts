@@ -102,6 +102,14 @@ class MetaConstants {
     }
   ];
 
+  static SISUKAART: MetaBasicInfo = [
+    { title: "Sisukaart | Merelaager" },
+    {
+      name: "description",
+      content: "Kõik merelaagri veebilehe lehed ühes kohas."
+    }
+  ];
+
   static KASUTAJATINGIMUSED: MetaBasicInfo = [
     { title: "Veebilehe kasutajatingimused | Merelaager" },
     {

@@ -11,55 +11,63 @@ const genOpenGraph = (
   return [
     {
       property: "og:type",
-      content: "website",
+      content: "website"
     },
     {
       property: "og:site_name",
-      content: "Laoküla merelaager",
+      content: "Laoküla merelaager"
     },
     {
       property: "og:locale",
-      content: "et",
+      content: "et"
     },
     {
       property: "og:url",
-      content: canonicalUrl,
+      content: canonicalUrl
     },
     {
       property: "og:image",
-      content: "https://merelaager.ee/media/img/merelaager_banner.jpg",
+      content: "https://merelaager.ee/media/img/merelaager_banner.jpg"
     },
     {
       property: "og:title",
-      content: basicInfo[0].title,
+      content: basicInfo[0].title
     },
     {
       property: "og:description",
-      content: basicInfo[1].content,
-    },
+      content: basicInfo[1].content
+    }
   ];
 };
 
 const getTwitterMeta = (): object[] => {
   return [
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:site", content: "@merelaager" },
+    { name: "twitter:site", content: "@merelaager" }
   ];
 };
 
 const genCanonical = (canonicalUrl: string): object[] => {
-  return [{ href: canonicalUrl, rel: "canonical" }];
+  return [{ tagName: "link", rel: "canonical", href: canonicalUrl }];
 };
 
 const getFavicons = (): object[] => {
   return [
     {
+      tagName: "link",
       rel: "icon",
       sizes: "196x196",
       type: "image/png",
-      href: "/img/favicons/favicon-196x196.png",
-    },
+      href: "/img/favicons/favicon-196x196.png"
+    }
   ];
+};
+
+// Keep per-user pages out of search results.
+export const genPrivateMetaData = (basicInfo: MetaBasicInfo): object[] => {
+  return (basicInfo as object[])
+    .concat([{ name: "robots", content: "noindex" }])
+    .concat(getFavicons());
 };
 
 export const genMetaData = (

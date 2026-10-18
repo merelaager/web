@@ -8,7 +8,8 @@ import {
 
 export default [
   index("routes/landing.tsx"),
-  route("registreermine/edu", "routes/registreerimine/edu.tsx"),
+  route("sitemap.xml", "routes/sitemap-xml.ts"),
+  route("registreerimine/edu", "routes/registreerimine/edu.tsx"),
   layout("routes/broneering/_layout.tsx", [
     route("broneering/:regId", "routes/broneering/route.tsx")
   ]),
@@ -16,6 +17,7 @@ export default [
     route("ajalugu", "routes/ajalugu.tsx"),
     route("meeskond", "routes/meeskond.tsx"),
     route("pildid", "routes/pildid.tsx"),
+    route("sisukaart", "routes/sisukaart.tsx"),
     route("registreerimine", "routes/registreerimine/route.tsx"),
     ...prefix("info", [
       index("routes/info/info.tsx"),

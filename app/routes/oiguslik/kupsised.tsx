@@ -3,7 +3,7 @@ import { genMetaData } from "~/utils/metagen";
 import MetaConstants from "~/utils/meta-constants";
 
 export const meta: MetaFunction = () => {
-  return genMetaData(MetaConstants.COOKIES, "/kupsised") as MetaDescriptor[];
+  return genMetaData(MetaConstants.COOKIES, "/oiguslik/kupsised") as MetaDescriptor[];
 };
 
 export default function CookiesLegalRoute() {

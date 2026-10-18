@@ -5,7 +5,7 @@ import MetaConstants from "~/utils/meta-constants";
 export const meta: MetaFunction = () => {
   return genMetaData(
     MetaConstants.ISIKUANDMED,
-    "/isikuandmed"
+    "/oiguslik/isikuandmed"
   ) as MetaDescriptor[];
 };
 
