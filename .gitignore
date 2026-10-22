@@ -13,6 +13,10 @@ public/img/*
 public/img/sponsors/*
 !public/img/sponsors/*.svg
 
+!public/img/historical/
+public/img/historical/*
+!public/img/historical/*.webp
+
 # Styles should be re-generated with SASS
 *.css
 *.css.map

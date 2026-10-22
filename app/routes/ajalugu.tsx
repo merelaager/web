@@ -165,7 +165,7 @@ export default function HistoryRoute() {
             ka merenoorkotkad.
           </p>
           <p>Tänasel päeval on säilinud veemoto ringi tegevus.</p>
-          <img src="/img/historical/muskliharjutus.jpg" alt="Muskliharjutus" />
+          <img src="/img/historical/muskliharjutus.webp" alt="Muskliharjutus" />
         </div>
       </section>
       <section className="c-section c-section--history">
@@ -254,7 +254,7 @@ export default function HistoryRoute() {
             vanimad 16-aastased. Kõik küsitletud olid eestlased.
           </p>
           <img
-            src="/img/historical/noored_meremehed.jpg"
+            src="/img/historical/noored_meremehed.webp"
             alt="Noored meremehed"
           />
         </div>
@@ -404,7 +404,7 @@ export default function HistoryRoute() {
             noore meremehe tunnistus. Üritus on väga lõbus ja reeglina ei jää
             kuivaks mitte keegi.
           </p>
-          <img src="/img/historical/ml_2000.dib" alt="Merelaager aastal 2000" />
+          <img src="/img/historical/ml_2000.webp" alt="Merelaager aastal 2000" />
         </div>
       </section>
       <section className="c-section c-section--history">
