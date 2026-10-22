@@ -41,17 +41,17 @@ const Footer = () => {
               <ul className="icons">
                 <li className="icon">
                   <a href="https://www.facebook.com/merelaager/">
-                    <img alt="Facebook" src="/img/icons/fb_icon.svg" />
+                    <img loading="lazy" alt="Facebook" src="/img/icons/fb_icon.svg" />
                   </a>
                 </li>
                 <li className="icon">
                   <a href="https://www.instagram.com/merelaager/">
-                    <img alt="Instagram" src="/img/icons/ig_icon.svg" />
+                    <img loading="lazy" alt="Instagram" src="/img/icons/ig_icon.svg" />
                   </a>
                 </li>
                 <li className="icon">
                   <a href="https://youtu.be/traAY8Hqg_U">
-                    <img alt="Youtube" src="/img/icons/yt_icon.svg" />
+                    <img loading="lazy" alt="Youtube" src="/img/icons/yt_icon.svg" />
                   </a>
                 </li>
               </ul>
@@ -59,7 +59,7 @@ const Footer = () => {
           </div>
           <div className="c-footer__col logo">
             <Link to={"/"}>
-              <img alt="Merelaagri logo" src="/img/merelaager_logo_white.svg" />
+              <img loading="lazy" alt="Merelaagri logo" src="/img/merelaager_logo_white.svg" />
             </Link>
           </div>
         </div>

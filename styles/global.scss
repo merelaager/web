@@ -985,15 +985,16 @@ a {
     height: $hero-height;
     text-align: center;
     color: #fff;
-    background-image: url(/img/landing/homehero@1k.webp);
-    background-repeat: no-repeat;
-    background-position: center 70%;
-    background-size: cover;
-    @media screen and (min-width: 2560px) {
-      background-image: url(/img/landing/homehero@2k.webp);
-    }
-    @media screen and (min-width: 3840px) {
-      background-image: url(/img/landing/homehero@4k.webp);
+
+    &__bg {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 70%;
     }
 
     &__content {

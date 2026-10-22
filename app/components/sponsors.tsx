@@ -14,6 +14,7 @@ const Sponsors = () => {
               alt="Haridus- ja Noorteamet"
               className="c-sponsor__img c-sponsor__img--vector"
               src="/img/sponsors/harno.svg"
+              loading="lazy"
             />
           </a>
         </li>
@@ -28,6 +29,7 @@ const Sponsors = () => {
               alt="EMSA"
               className="c-sponsor__img c-sponsor__img--vector"
               src="/img/sponsors/emsa.svg"
+              loading="lazy"
             />
           </a>
         </li>
@@ -42,6 +44,7 @@ const Sponsors = () => {
               alt="Baltic Workboats"
               className="c-sponsor__img c-sponsor__img--vector c-sponsor__img--black"
               src="/img/sponsors/bwb.svg"
+              loading="lazy"
             />
           </a>
         </li>
@@ -56,6 +59,7 @@ const Sponsors = () => {
               alt="Viking Life-Saving"
               className="c-sponsor__img c-sponsor__img--vector"
               src="/img/sponsors/viking.svg"
+              loading="lazy"
             />
           </a>
         </li>
@@ -70,6 +74,7 @@ const Sponsors = () => {
               alt="Meredivisjon"
               className="c-sponsor__img c-sponsor__img--vector c-sponsor__img--black"
               src="/img/sponsors/meredivisjon.svg"
+              loading="lazy"
             />
           </a>
         </li>
@@ -84,6 +89,7 @@ const Sponsors = () => {
               alt="Lääne-Harju vald"
               className="c-sponsor__img c-sponsor__img--vector c-sponsor__img--padded"
               src="/img/sponsors/laane-harju.svg"
+              loading="lazy"
             />
           </a>
         </li>
@@ -98,6 +104,7 @@ const Sponsors = () => {
               alt="Tallinn"
               className="c-sponsor__img c-sponsor__img--vector c-sponsor__img--padded"
               src="/img/sponsors/tallinn.svg"
+              loading="lazy"
             />
           </a>
         </li>

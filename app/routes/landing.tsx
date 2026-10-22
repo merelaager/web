@@ -170,6 +170,16 @@ const Hero = () => {
 
   return (
     <section className="c-landing-hero c-section">
+      <picture>
+        <source media="(min-width: 3840px)" srcSet="/img/landing/homehero@4k.webp" />
+        <source media="(min-width: 2560px)" srcSet="/img/landing/homehero@2k.webp" />
+        <img
+          alt=""
+          className="c-landing-hero__bg"
+          src="/img/landing/homehero@1k.webp"
+          fetchPriority="high"
+        />
+      </picture>
       <NavBar inverted={true} />
       <div className="c-landing-hero__content">
         <h1 className="">{tagline}</h1>
