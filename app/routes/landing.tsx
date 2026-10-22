@@ -83,6 +83,9 @@ const PromoSectionCards = () => {
         <div className="c-home-block-media">
           <video
             ref={vidRef.current[idx] as RefObject<HTMLVideoElement>}
+            poster={content.poster}
+            width={1500}
+            height={1000}
             autoPlay
             loop
             muted
@@ -90,8 +93,8 @@ const PromoSectionCards = () => {
             onTimeUpdate={(e) => setProgress(idx, e)}
             onClick={() => playPauseVideo(idx)}
           >
-            <source src={content.video_mp4} type="video/mp4"></source>
             <source src={content.video_webm} type="video/webm"></source>
+            <source src={content.video_mp4} type="video/mp4"></source>
           </video>
           <progress
             className="progressbar"

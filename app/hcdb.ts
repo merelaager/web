@@ -59,6 +59,7 @@ export interface PromoContent {
   img?: ReactElement;
   video_mp4?: string;
   video_webm?: string;
+  poster?: string;
 }
 
 export const landingPromoContent: PromoContent[] = [
@@ -66,22 +67,25 @@ export const landingPromoContent: PromoContent[] = [
     title: "Laoküla merelaager",
     description:
       "Suurepärane võimalus 8–16aastastel merehuvilistel veeta suvi looduskaunis kohas mere kaldal.",
-    video_webm: "/img/landing/introduction.webm",
-    video_mp4: "/img/landing/introduction.mp4"
+    video_webm: "https://merelaager.b-cdn.net/sait/introduction.webm",
+    video_mp4: "https://merelaager.b-cdn.net/sait/introduction.mp4",
+    poster: "https://merelaager.b-cdn.net/sait/introduction.webp"
   },
   {
     title: "Eelnev merekogemus pole oluline",
     description:
       "12päevase laagrivahetuse jooksul võib selgeks saada nii purjetamise, sõudmise kui ka muude meresõiduvahendite kasutamise algtõed.",
-    video_webm: "/img/landing/sailing.webm",
-    video_mp4: "/img/landing/sailing.mp4"
+    video_webm: "https://merelaager.b-cdn.net/sait/sailing.webm",
+    video_mp4: "https://merelaager.b-cdn.net/sait/sailing.mp4",
+    poster: "https://merelaager.b-cdn.net/sait/sailing.webp"
   },
   {
     title: "Ja siis, kui merele ei saa",
     description:
       "Merelaagri õhtuid ja ka tormipäevi sisustavad tavapärased laagri tegevused – lõkkeõhtud, diskod, matkad ja mitmesugused võistlused.",
-    video_webm: "/img/landing/freetime.webm",
-    video_mp4: "/img/landing/freetime.mp4"
+    video_webm: "https://merelaager.b-cdn.net/sait/freetime.webm",
+    video_mp4: "https://merelaager.b-cdn.net/sait/freetime.mp4",
+    poster: "https://merelaager.b-cdn.net/sait/freetime.webp"
   }
 ];
 
