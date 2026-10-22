@@ -133,6 +133,7 @@ const PromoSection = () => {
         <div className="c-home-block-media">
           <iframe
             title="Merelaagri reklaamvideo"
+            loading="lazy"
             className="c-landing__video"
             src="https://www.youtube-nocookie.com/embed/Lnd8R-ObntU"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
