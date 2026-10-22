@@ -5,22 +5,28 @@ import MetaConstants from "~/utils/meta-constants";
 import Email from "~/components/email";
 import { JSX } from "react";
 
-const picturesList: string[] = [
-  "Kati_052.JPG",
-  "Kati_073.JPG",
-  "Kati_171.JPG",
-  "Martin_030.webp",
-  "Martin_055.webp",
-  "Martin_123.webp",
-  "tk_ilmutatud_008.webp",
-  "tk_ilmutatud_059.webp",
-  "Kati_067.JPG",
-  "Kati_103.JPG",
-  "Martin_023.webp",
-  "Martin_032.webp",
-  "Martin_103.webp",
-  "Martin_130.webp",
-  "tk_ilmutatud_054.webp"
+interface GalleryPicture {
+  file: string;
+  width: number;
+  height: number;
+}
+
+const picturesList: GalleryPicture[] = [
+  { file: "Kati_052@1600.webp", width: 1600, height: 1066 },
+  { file: "Kati_073@1600.webp", width: 1600, height: 1066 },
+  { file: "Kati_171@1600.webp", width: 1600, height: 1066 },
+  { file: "Martin_030@1600.webp", width: 1600, height: 919 },
+  { file: "Martin_055@1600.webp", width: 1600, height: 904 },
+  { file: "Martin_123@1600.webp", width: 1600, height: 1066 },
+  { file: "tk_ilmutatud_008@1600.webp", width: 1600, height: 1073 },
+  { file: "tk_ilmutatud_059@1600.webp", width: 1600, height: 1073 },
+  { file: "Kati_067@1600.webp", width: 1600, height: 1066 },
+  { file: "Kati_103@1600.webp", width: 1600, height: 1066 },
+  { file: "Martin_023@1600.webp", width: 1600, height: 882 },
+  { file: "Martin_032@1600.webp", width: 1600, height: 1106 },
+  { file: "Martin_103@1600.webp", width: 1600, height: 1002 },
+  { file: "Martin_130@1600.webp", width: 1600, height: 1066 },
+  { file: "tk_ilmutatud_054@1600.webp", width: 1600, height: 1073 }
 ];
 
 export const meta: MetaFunction = () => {
@@ -29,7 +35,14 @@ export const meta: MetaFunction = () => {
 
 export default function PicturesRoute() {
   const pictures: JSX.Element[] = picturesList.map((picture) => (
-    <img key={picture} src={`/img/gallery/${picture}`} />
+    <img
+      key={picture.file}
+      src={`/img/gallery/${picture.file}`}
+      width={picture.width}
+      height={picture.height}
+      loading="lazy"
+      alt=""
+    />
   ));
 
   return (
