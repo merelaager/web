@@ -242,11 +242,22 @@ export const formAction = async (form: FormData) => {
 
   const regData: RegistrationAPIRequest[] = [];
 
-  const existingShifts = (
-    await prisma.shiftInfo.findMany({
-      select: { id: true }
-    })
-  ).map((entry) => entry.id);
+  let existingShifts: number[];
+  try {
+    existingShifts = (
+      await prisma.shiftInfo.findMany({
+        select: { id: true }
+      })
+    ).map((entry) => entry.id);
+  } catch (err) {
+    console.error("Could not load shifts from the database:", err);
+    errors.error =
+      "Registreerimine ei ole hetkel tehnilise rikke tõttu võimalik. Palun proovige mõne aja pärast uuesti.";
+    return data(
+      { errors, registrationId: null },
+      { status: StatusCodes.SERVICE_UNAVAILABLE }
+    );
+  }
 
   for (let i = 0; i < childCount; ++i) {
     const name = String(names[i]).trim();

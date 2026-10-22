@@ -16,6 +16,7 @@ import Email from "~/components/email";
 import { RegistrationSection } from "~/routes/registreerimine/registration";
 import { formAction } from "~/routes/registreerimine/action";
 import { getFreeSlots } from "~/utils/slots";
+import { WarningBanner } from "~/components/banners";
 import { StatusCodes } from "http-status-codes";
 
 export const meta: MetaFunction = () => {
@@ -26,13 +27,28 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async () => {
-  const { shifts, remainingSlots } = await getFreeSlots();
+  const { available, shifts, remainingSlots } = await getFreeSlots();
 
   return {
+    available,
     shifts,
     remainingSlots,
     currentTime: Date.now()
   };
+};
+
+const UnavailableSection = () => {
+  return (
+    <section className="c-section">
+      <div className="o-container">
+        <h3 className="c-section-heading">Registreerimine</h3>
+        <WarningBanner>
+          Registreerimine ei ole hetkel tehnilise rikke tõttu võimalik. Palun
+          proovige mõne aja pärast uuesti.
+        </WarningBanner>
+      </div>
+    </section>
+  );
 };
 
 const RefsSection = () => {
@@ -120,6 +136,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function RegistrationRoute() {
+  const { available } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const errors = actionData?.errors;
   if (errors) {
@@ -132,6 +149,15 @@ export default function RegistrationRoute() {
     alert(`Registreerimine ei õnnestunud.\n\nPõhjus: ${actionData.message}`);
   }, [actionData]);
   */
+
+  if (!available) {
+    return (
+      <main>
+        <RefsSection />
+        <UnavailableSection />
+      </main>
+    );
+  }
 
   return (
     <main>

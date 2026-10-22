@@ -147,17 +147,20 @@ const PromoSection = () => {
 };
 
 export const loader = async () => {
-  const dbTagline = await prisma.generalInfo.findUnique({
-    where: { key: "tagline" }
-  });
-  const dbSubtext = await prisma.generalInfo.findUnique({
-    where: { key: "subtext" }
-  });
+  try {
+    const [dbTagline, dbSubtext] = await Promise.all([
+      prisma.generalInfo.findUnique({ where: { key: "tagline" } }),
+      prisma.generalInfo.findUnique({ where: { key: "subtext" } })
+    ]);
 
-  const tagline = dbTagline ? dbTagline.value : LANDING_TAGLINE;
-  const subtext = dbSubtext ? dbSubtext.value : LANDING_SUBTEXT;
+    const tagline = dbTagline ? dbTagline.value : LANDING_TAGLINE;
+    const subtext = dbSubtext ? dbSubtext.value : LANDING_SUBTEXT;
 
-  return { tagline, subtext };
+    return { tagline, subtext };
+  } catch (err) {
+    console.error("Could not load the landing text from the database:", err);
+    return { tagline: LANDING_TAGLINE, subtext: LANDING_SUBTEXT };
+  }
 };
 
 const Hero = () => {

@@ -10,6 +10,8 @@ const createClient = () => {
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     ssl: true,
+    // When to use fallbacks when the DB connection fails.
+    acquireTimeout: 3000
   });
   return new PrismaClient({ adapter });
 };

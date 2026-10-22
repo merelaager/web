@@ -4,7 +4,7 @@ import type { ReactElement } from "react";
 import { Fragment } from "react";
 
 import Email from "~/components/email";
-import { InfoBanner } from "~/components/banners";
+import { InfoBanner, WarningBanner } from "~/components/banners";
 
 import { genMetaData } from "~/utils/metagen";
 import MetaConstants from "~/utils/meta-constants";
@@ -108,7 +108,7 @@ interface CalendarMonthProps {
 const CalendarMonth = ({ monthIndex, activeDays }: CalendarMonthProps) => {
   const monthDate = new Date(YEAR, monthIndex, 1);
   const monthName = monthDate.toLocaleDateString("et", {
-    month: "long",
+    month: "long"
   });
 
   // Get the number of days in a month.
@@ -212,7 +212,7 @@ const CalendarsComponent = ({ shifts }: CalendarComponentProps) => {
         startDay: 1,
         endDay: endDay,
         isLight: isLight,
-        isTrueStart: false,
+        isTrueStart: false
       });
 
       // The end day for the first month is the last day of the month.
@@ -227,7 +227,7 @@ const CalendarsComponent = ({ shifts }: CalendarComponentProps) => {
       startDay: shiftStartDate.getDate(),
       endDay: endDay,
       isLight: isLight,
-      isTrueStart: true,
+      isTrueStart: true
     });
   }
 
@@ -276,13 +276,27 @@ const RegistrationSection = () => {
 };
 
 export const loader = async () => {
-  const { shifts, remainingSlots } = await getFreeSlots();
+  const { available, shifts, remainingSlots } = await getFreeSlots();
 
-  return { shifts, remainingSlots };
+  return { available, shifts, remainingSlots };
 };
 
 const ShiftDatesSection = () => {
-  const { shifts, remainingSlots } = useLoaderData<typeof loader>();
+  const { available, shifts, remainingSlots } = useLoaderData<typeof loader>();
+
+  if (!available || shifts.length === 0) {
+    return (
+      <section className="c-section" id="ajad">
+        <div className="o-container">
+          <h3 className="c-section-heading">Laagrivahetuste ajad</h3>
+          <WarningBanner>
+            Vahetuste info ei ole hetkel saadaval. Palun proovige mõne aja
+            pärast uuesti.
+          </WarningBanner>
+        </div>
+      </section>
+    );
+  }
 
   const mappedShifts: ShiftInfo[] = [];
   shifts.forEach((shift) => {
@@ -292,7 +306,7 @@ const ShiftDatesSection = () => {
       bossUsername: shift.bossEmail.split("@")[0],
       bossPhone: shift.bossPhone,
       length: shift.length,
-      startDate: shift.startDate,
+      startDate: shift.startDate
     });
   });
 

@@ -18,21 +18,60 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ params }: LoaderArgs) => {
   if (!params.regId)
-    return { registrationId: params.regId, registrations: [], email: null };
+    return {
+      registrationId: params.regId,
+      registrations: [],
+      email: null,
+      available: true
+    };
 
-  const registrations = await getRegistrationInfo(params.regId);
+  let registrations: Awaited<ReturnType<typeof getRegistrationInfo>>;
+  try {
+    registrations = await getRegistrationInfo(params.regId);
+  } catch (err) {
+    console.error("Could not load the booking from the database:", err);
+    return {
+      registrationId: params.regId,
+      registrations: [],
+      email: null,
+      available: false
+    };
+  }
+
   const flattened = registrations.map((registration) => {
     return { shiftNr: registration.shiftNr, name: registration.child.name };
   });
 
   const email =
     registrations.length >= 1 ? registrations[0].contactEmail : null;
-  return { registrationId: params.regId, registrations: flattened, email };
+  return {
+    registrationId: params.regId,
+    registrations: flattened,
+    email,
+    available: true
+  };
 };
 
 export default function Route() {
-  const { registrationId, registrations, email } =
+  const { registrationId, registrations, email, available } =
     useLoaderData<typeof loader>();
+
+  if (!available) {
+    return (
+      <main>
+        <section className="c-section">
+          <div className="o-container">
+            <h3 className="c-section-heading">Broneeringu info</h3>
+            <p>{`Broneeringu kood: ${registrationId}`}</p>
+            <p>
+              Broneeringu infot ei õnnestunud hetkel tehnilise rikke tõttu
+              kuvada. Palun proovige mõne aja pärast uuesti.
+            </p>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   if (!registrations || registrations.length === 0) {
     return (
